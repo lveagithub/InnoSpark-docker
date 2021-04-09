@@ -1,25 +1,18 @@
 #Create a base image.
-FROM python:3.9.0 AS base
+FROM python:3.8 AS base
 
 #Set work directory
 WORKDIR /usr/src/flask_app
+
+#Install PIP first
+#RUN set -xe \
+#    && apt-get update \
+#    && apt-get install python-pip
+
+#Update pip
+RUN pip install --upgrade pip
 
 #Install dependencies using a requirements file
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
-
-#########################################
-# debugger
-#########################################
-#Create intermediate image layer debugger
-FROM base AS debugger
-CMD ["python", "-m", "debugpy", "-listen", "0.0.0.0:5678", "--wait-for-client", "-m"]
-
-#########################################
-# primary
-#########################################
-
-#Create intermediate image layer primary
-FROM base AS primary
-CMD ["python", "-m"]
